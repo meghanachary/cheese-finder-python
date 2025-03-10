@@ -18,8 +18,11 @@ WHITE = (255, 255, 255)
 
 # Set up Rat
 rat_speed = 5
+boosted_speed = 8  # Speed bost after collecting candy
+speed_boost_duration = 10000  # Duration of 10 second speed boost (in milliseconds) 
+current_speed = rat_speed
 
-# Set up cheeses and pizzas
+# Set up items
 cheese_radius = 8
 cheeses = []
 pizzas = []
@@ -29,7 +32,7 @@ score = 0
 # Set up font for score
 font = pygame.font.SysFont("Arial", 24)
 
-# Load the cheese collection sound effect
+# Load the item collection sound effects
 cheese_sound = pygame.mixer.Sound("point_2.mp3")
 
 pizza_sound = pygame.mixer.Sound("point.mp3")  
@@ -74,7 +77,6 @@ candy_img = pygame.image.load("candy.png")
 candy_img = pygame.transform.scale(candy_img, (32, 62))
 
 
-
 # Set up game loop
 clock = pygame.time.Clock()
 
@@ -83,6 +85,9 @@ cheeses.append(create_cheese())
 
 # Initial rat position
 rat_x, rat_y = WIDTH // 2, HEIGHT // 2
+
+# Track the time of the speed boost
+boost_end_time = 0  # The time when the speed boost should end
 
 # Spawn pizza less frequently with a cool-down
 last_pizza_time = 0  # Time when the last pizza spawned
@@ -102,17 +107,23 @@ while True:
     # Key press handling for movement
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
-        rat_x -= rat_speed
+        rat_x -= current_speed
     if keys[pygame.K_RIGHT]:
-        rat_x += rat_speed
+        rat_x += current_speed
     if keys[pygame.K_UP]:
-        rat_y -= rat_speed
+        rat_y -= current_speed
     if keys[pygame.K_DOWN]:
-        rat_y += rat_speed
+        rat_y += current_speed
 
     # Prevent rat from going out of bounds
     rat_x = max(0, min(rat_x, WIDTH - rat_img.get_width()))
     rat_y = max(0, min(rat_y, HEIGHT - rat_img.get_height()))
+
+    # Check if speed boost is still active
+    current_time = pygame.time.get_ticks()
+    if current_time > boost_end_time:
+        # Reset speed to normal after 10 seconds
+        current_speed = rat_speed
 
     # Check for collision with cheeses
     for cheese in cheeses[:]:
@@ -147,8 +158,11 @@ while True:
             score += 20  # Increased points (10) for candy
             candy_sound.play()  # Sound effect when candy is collected
 
+            # Increase rat speed and start the speed boost timer
+            current_speed = boosted_speed
+            boost_end_time = current_time + speed_boost_duration  # Set the end time of the boost
+
    # Check if enough time has passed since the last candy spawn
-    current_time = pygame.time.get_ticks()  # Get current time in milliseconds
     if current_time - last_candy_time > candy_spawn_rate:
         # Spawn a candy with a 30% chance every candy_spawn_rate milliseconds
         if random.random() < 0.3:  # 30% chance to spawn a candy
@@ -177,9 +191,9 @@ while True:
     # Display the score
     score_text = font.render(f"Collected: {score}", True, WHITE)
 
-    # Calculate the position to center the score at the top middle of the screen
+    # Center score at top of screen
     score_x = (WIDTH - score_text.get_width()) // 2  # Center horizontally
-    screen.blit(score_text, (score_x, 20))  # Display score at the calculated position
+    screen.blit(score_text, (score_x, 20)) 
 
     # Update display
     pygame.display.flip()
