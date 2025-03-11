@@ -57,6 +57,7 @@ def create_candy():
     y = random.randint(30, HEIGHT - 30)
     return [x, y]
 
+# Load images and resize
 # Load rat image
 rat_img = pygame.image.load("rat.png")  
 rat_img = pygame.transform.scale(rat_img, (90, 90))
@@ -76,6 +77,11 @@ pizza_img = pygame.transform.scale(pizza_img, (52, 52))
 candy_img = pygame.image.load("candy.png")
 candy_img = pygame.transform.scale(candy_img, (32, 62))
 
+# Load speaker and mute icons
+mute_icon = pygame.image.load("mute.png") 
+mute_icon = pygame.transform.scale(mute_icon, (32, 32)) 
+unmute_icon = pygame.image.load("unmute.png")  
+unmute_icon = pygame.transform.scale(unmute_icon, (32, 32))
 
 # Set up game loop
 clock = pygame.time.Clock()
@@ -96,6 +102,28 @@ pizza_spawn_rate = 15000  # Minimum 15 seconds (15000 milliseconds) between pizz
 # Spawn candy less frequently with a cool-down
 last_candy_time = 0  # Time when the last candy spawned
 candy_spawn_rate = 20000  # Minimum 20 seconds (20000 milliseconds) between candy spawns
+# Mute control variables
+muted = False  # Flag to check if audio is muted
+
+# Set initial volume for sound effects (1.0 is full volume, 0.0 is muted)
+cheese_sound.set_volume(1.0)  # Set cheese sound volume to 100%
+pizza_sound.set_volume(1.0)  # Set pizza sound volume to 100%
+candy_sound.set_volume(1.0)  # Set candy sound volume to 100%
+
+def toggle_mute():
+    global muted
+    if muted:
+        # Unmute: Restore sound volume for all sound effects
+        cheese_sound.set_volume(1.0)  # Full volume for cheese sound effects
+        pizza_sound.set_volume(1.0)  # Full volume for pizza sound effects
+        candy_sound.set_volume(1.0)  # Full volume for candy sound effects
+        muted = False
+    else:
+        # Mute: Set all sound volumes to 0 (silent)
+        cheese_sound.set_volume(0.0)  # Mute cheese sound effects
+        pizza_sound.set_volume(0.0)  # Mute pizza sound effects
+        candy_sound.set_volume(0.0)  # Mute candy sound effects
+        muted = True
 
 while True:
     # Event handling
@@ -103,6 +131,14 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+
+        # Check for mouse click to toggle mute
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+
+            # Check if the mute button is clicked
+            if mute_button.collidepoint(mouse_x, mouse_y):
+                toggle_mute()
 
     # Key press handling for movement
     keys = pygame.key.get_pressed()
@@ -191,9 +227,20 @@ while True:
     # Display the score
     score_text = font.render(f"Collected: {score}", True, WHITE)
 
-    # Center score at top of screen
+    # Display score centered at top of screen
     score_x = (WIDTH - score_text.get_width()) // 2  # Center horizontally
     screen.blit(score_text, (score_x, 20)) 
+
+    # Draw mute/unmute icon
+    mute_icon_width, mute_icon_height = mute_icon.get_width(), mute_icon.get_height()
+    mute_button = pygame.Rect(WIDTH - mute_icon_width - 20, 10, mute_icon_width, mute_icon_height)
+    
+    # Display mute or unmute icon based on the muted state
+    if muted:
+        screen.blit(mute_icon, (WIDTH - mute_icon_width - 20, 10)) 
+    else:
+        screen.blit(unmute_icon, (WIDTH - mute_icon_width - 20, 10))  
+
 
     # Update display
     pygame.display.flip()
