@@ -7,6 +7,8 @@
 
 ### Images Used
 
+[street background image](https://unsplash.com/photos/worms-eye-view-of-sewer-lid-Qq7A85iCzhQ)
+
 [pizza image](https://gallery.yopriceville.com/Free-Clipart-Pictures/Fast-Food-PNG-Clipart/Pizza_PNG_Clip_Art_Image)
 
 [rat image](https://pngtree.com/freepng/a-cheerful-cartoon-mouse-with-large-eyes-and-wide-smile_16050859.html)
@@ -14,6 +16,10 @@
 [cheese image](https://www.freeiconspng.com/img/48399)
 
 [candy image](https://pngfre.com/candy-png/candy-118-1/)
+
+[speaker mute icon](https://www.flaticon.com/free-icon/volume-mute_16878886?term=audio+speaker+mute&page=1&position=40&origin=search&related_id=16878886)
+
+[speaker unmute icon](https://www.flaticon.com/free-icon/audio_786474?term=audio+speaker&page=1&position=20&origin=search&related_id=786474)
 
 ### Audio Used
 
