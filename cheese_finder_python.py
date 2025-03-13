@@ -63,7 +63,7 @@ rat_img = pygame.image.load("rat.png")
 rat_img = pygame.transform.scale(rat_img, (90, 90))
 
 # Load background image
-background_img = pygame.image.load("backgroundgame_muted_faded.png")  
+background_img = pygame.image.load("background_street.png")  
 
 # Load cheese image
 cheese_img = pygame.image.load("cheese.png")  
